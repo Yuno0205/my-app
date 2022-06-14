@@ -9,6 +9,7 @@ export const OrdersContext = createContext()
 
 const OrdersContextProvider = ({ children }) => {
   const notify = () => toast.warn("Successfully updated order status !");
+  const notify2 = () => toast.success("Successfull  !");
   //State
 
 
@@ -46,13 +47,15 @@ const OrdersContextProvider = ({ children }) => {
 
   //New Orders
   const onSubmitCreateOrders = async (data) => {
+    console.log("Orders data" , data)
     try {
       const response = await postAPI(API_SEVER_ORDER, data)
 
 
       if (response) {
-        alert("+1 Orders")
-
+       
+           notify2()
+           getListOrders()
       }
     } catch (error) {
       console.log("Your error :", error)
@@ -91,12 +94,15 @@ const OrdersContextProvider = ({ children }) => {
 
   }
 
+  
+
   const OrdersContextData = {
     orders, setOrders, onSubmitCreateOrders,
     getListOrders,
     listorders, setListOrders,
     postOrders, setPostOrders,
-    changeOrdersStatus
+    changeOrdersStatus,
+    
   }
 
 

@@ -8,9 +8,6 @@ import { removeCart } from '../../store/actions'
 function Header() {
 
     const { handleSearch } = useContext(ProductContext)
-  
-
-    
 
     const [user, setUser] = useState(localStorage['User'] ? JSON.parse(localStorage['User']) : { username: 'Đăng nhập', role: 'user', img: 'https://cdn-icons-png.flaticon.com/512/149/149071.png' })
 
@@ -24,14 +21,12 @@ function Header() {
         const id = JSON.parse(localStorage.getItem("User")).id
 
 
-        console.log("Your role :", role)
-        console.log("Test users ", username)
-
-
     } else {
         localStorage.setItem('User', JSON.stringify({ username: 'Normal user', role: "user", img: "" }));
 
     }
+
+    
 
 
     const signOut = () => {
@@ -40,7 +35,6 @@ function Header() {
 
     const checkItem = cart.length
 
-   
 
 
     return (
@@ -53,7 +47,7 @@ function Header() {
 
                 <div id="menu-bar" className="fas fa-bars"></div>
 
-                <a href="#" className="logo"  >
+                <a href="/" className="logo"  >
                     Nike
                 </a>
 
@@ -61,8 +55,9 @@ function Header() {
                     <Link to="/">Home</Link>
                     <Link to="/product">List product</Link>
 
-                    {/* {isAdmin ? < Link to="/dashboard">Test Dashboard</Link> : ""} */}
-                    < Link to="/dashboard">Dashboard</Link>
+                   { user.role =="admin" ?  < Link to="/dashboard">Dashboard</Link> : ""}
+
+                   
 
                     <Link to="/checkout">Check Out</Link>
                    
@@ -138,22 +133,22 @@ function Header() {
 
                             <ul className='header__navbar-user-menu'>
                                 <li className='header__navbar-user-item'>
-                                    <a className='header__navbar-user-item-name' href=''> Tài khoản của tôi</a>
+                                    <Link to="/*" className='header__navbar-user-item-name' > My Account</Link>
 
                                 </li>
 
                                 <li className='header__navbar-user-item'>
-                                    <Link to={`/ordersdetail/${user.id}`} className='header__navbar-user-item-name' > Đơn hàng của tôi</Link>
+                                    <Link to="/*" className='header__navbar-user-item-name' > My Orders</Link>
 
                                 </li>
 
                                 <li className='header__navbar-user-item'>
-                                    <a className='header__navbar-user-item-name' href='/'> Một option gì đó</a>
+                                    <Link className='header__navbar-user-item-name' to='/*'>Purchase history</Link>
 
                                 </li>
 
                                 <li className='header__navbar-user-item'>
-                                    <a className='header__navbar-user-item-name' href='' onClick={signOut}> Đăng xuất</a>
+                                    <Link to="/login" className='header__navbar-user-item-name'  onClick={signOut}>Log out</Link>
 
                                 </li>
                             </ul>

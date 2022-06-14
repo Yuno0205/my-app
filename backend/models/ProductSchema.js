@@ -9,6 +9,7 @@ const ProductsSchema = new Schema({
   color : String,
   size: [String],
   images: String,
+  discount : {type : Number , default: 0},
   category: { type: Schema.Types.ObjectId, ref: 'Categories' },
   createAt: { type: Date, default: Date.now() },
 

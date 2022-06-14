@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import { LoginContext  } from '../../context/LoginContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
 
 
 
@@ -48,7 +49,7 @@ function Login() {
                                                 </label>
                                             </div>
                                             <div className="w-50 text-md-right">
-                                                <a style={{ color: 'white' }} href="/resgister" >Do not have account?</a>
+                                                <Link style={{ color: 'white' }} to="/resgister" >Do not have account?</Link>
                                             </div>
                                         </div>
                                     </form>

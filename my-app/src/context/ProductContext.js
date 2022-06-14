@@ -1,8 +1,10 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useReducer, useState } from 'react'
 import { deleteAPI, getAPI, postAPI, postAPIProduct, putAPI } from '../utils/api'
 import { API_SEVER_CATEGORY, API_SEVER_PRODUCT } from '../utils/const'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { productReducer } from '../reducer/productReducer';
+import { CHANGEHOTPAGE, CHANGEPAGE, GETFLASHPRODUCT, GETHOTPRODUCT, GETPRODUCTBYCATE, SETLISTPRODUCT } from '../constants';
 
 export const ProductContext = createContext()
 
@@ -26,8 +28,27 @@ const ProductContextProvider = ({ children, item }) => {
   const [keyword, setKeyword] = useState("")
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
+  const [hotpage, setHotPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const limit = 8
+  const limit = 10
+  const hotLimit = 4
+
+  const [productState, dispatch] = useReducer(productReducer, {
+    data: [],
+    listproduct: [],
+    hotproduct : [],
+    flashproduct: [],
+    listcategory: [],
+    keyword: "",
+    loading: true,
+    page: 1,
+    total: 0,
+    totalHot : 0,
+    totalFlash : 0,
+    limit: 8
+  })
+
+
 
   //State của category
   const [post, setPost] = useState({
@@ -49,7 +70,8 @@ const ProductContextProvider = ({ children, item }) => {
     color: '',
     size: [],
     category: '',
-    images: ''
+    images: '',
+    discount: 0
   })
 
   const [selectedPost, setSelectedPost] = useState(undefined)
@@ -73,11 +95,11 @@ const ProductContextProvider = ({ children, item }) => {
   //Check post selected
   const onEdit = async (post) => {
 
-    console.log("Post truyền", post)
+
     setSelectedPost(post)
     setPostEdit(post)
-    
-    console.log("Post editt nè :", postEdit)
+
+   
   }
 
 
@@ -86,15 +108,85 @@ const ProductContextProvider = ({ children, item }) => {
 
     const response = await getAPI(API_SEVER_PRODUCT, {
       keyword,
-      // categoryList: listcategory,
       limit,
       page,
     })
+    
+    if (response?.data) {
+      dispatch({
+        type: SETLISTPRODUCT,
+        payload: { listproduct: response?.data  , total : response?.totalPage}
+      })
+      return response.data
+    }
 
-    console.log("Your response is  :", response.data)
+
     // check dữ dữ liệu trước khi lấy
     if (response) {
-      setListProduct(response?.data)
+      // setListProduct(response?.data)
+      setTotal(response?.totalPage)
+      setLoading(false)
+    }
+
+
+
+  }
+
+
+  const getHotProduct = async () => {
+
+    const response = await getAPI(API_SEVER_PRODUCT + '/hot', {
+      keyword,
+      hotLimit,
+      hotpage,
+    })
+    
+    if (response?.data) {
+      dispatch({
+        type: GETHOTPRODUCT,
+        payload: { hotproduct : response?.data  , totalHot : response?.totalPage}
+      })
+      return response.data
+    }
+
+
+    
+
+
+    // check dữ dữ liệu trước khi lấy
+    if (response) {
+      // setListProduct(response?.data)
+      setTotal(response?.totalPage)
+      setLoading(false)
+    }
+
+
+
+  }
+
+  const getFlashProduct = async () => {
+
+    const response = await getAPI(API_SEVER_PRODUCT + '/flash', {
+      keyword,
+      limit,
+      
+    })
+    console.log("response fl :" , response)
+    if (response?.data) {
+      dispatch({
+        type: GETFLASHPRODUCT,
+        payload: { flashproduct : response?.data  , totalFlash : response?.totalPage}
+      })
+      return response.data
+    }
+
+
+    
+
+
+    // check dữ dữ liệu trước khi lấy
+    if (response) {
+      // setListProduct(response?.data)
       setTotal(response?.totalPage)
       setLoading(false)
     }
@@ -107,16 +199,19 @@ const ProductContextProvider = ({ children, item }) => {
   //Show by Category
   const getProductByCategory = async (id) => {
 
-    const response = await getAPI(API_SEVER_PRODUCT + '/bycate/' + id)
-    console.log("List category :", response)
+    const response = await getAPI(API_SEVER_PRODUCT + '/bycate/' + id  )
+  
     // check dữ dữ liệu trước khi lấy
     if (response) {
-      setListProduct(response)
+      dispatch({
+        type: GETPRODUCTBYCATE,
+        payload: { listproduct: response  , total : response.totalPage}
+      })
     } else {
       alert('Error')
     }
 
-    console.log("ID Cate :", id)
+
 
 
 
@@ -138,9 +233,7 @@ const ProductContextProvider = ({ children, item }) => {
       console.log("Your error :", error)
     }
 
-    console.log("Your product data ", post)
-
-    console.log("Type of data", typeof (data))
+   
 
   }
 
@@ -159,7 +252,7 @@ const ProductContextProvider = ({ children, item }) => {
       console.log("Cant delete product , error :", error)
     }
 
-    console.log("Id need remove :", id)
+  
 
   }
 
@@ -170,7 +263,7 @@ const ProductContextProvider = ({ children, item }) => {
       const response = await putAPI(API_SEVER_PRODUCT + `/${data._id}`, data)
 
 
-      console.log("Response edit :", response)
+    
       if (response && response.status === 200) {
         notifyPro2()
         getListProduct()
@@ -191,17 +284,13 @@ const ProductContextProvider = ({ children, item }) => {
   const getListCategory = async () => {
 
     const response = await getAPI(API_SEVER_CATEGORY)
-    console.log("List category :", response.data)
+  
     // check dữ dữ liệu trước khi lấy
     if (response) {
       setListCategory(response.data)
     } else {
       alert('No have category')
     }
-
-
-
-    console.log("Check list :", listcategory)
 
 
   }
@@ -221,7 +310,7 @@ const ProductContextProvider = ({ children, item }) => {
     }
 
   }
-  
+
 
   //Delete Category 
   const deleteCategory = async (id, e) => {
@@ -229,7 +318,7 @@ const ProductContextProvider = ({ children, item }) => {
 
       const response = await deleteAPI(API_SEVER_CATEGORY + `/${id}`)
 
-      console.log("Delete url :", response)
+     
       if (response && response.status === 200) {
         // alert("Xóa thành công category với ID :", { id })
         notifyCate3()
@@ -246,7 +335,6 @@ const ProductContextProvider = ({ children, item }) => {
     try {
 
       const response = await putAPI(API_SEVER_CATEGORY + `/${data._id}`, data)
-      console.log("Data edit :", data)
 
       console.log("Response edit :", response)
       if (response && response.status === 200) {
@@ -266,16 +354,60 @@ const ProductContextProvider = ({ children, item }) => {
   //Change page
   const handleChangePage = (event, value) => {
     setPage(value)
+    dispatch({
+      type: CHANGEPAGE,
+      payload: { page : value }
+    })
+  }
+
+  const handleChangeHotPage = (event, value) => {
+    setHotPage(value)
+    dispatch({
+      type: CHANGEHOTPAGE,
+      payload: { hotpage : value }
+    })
   }
 
   //Search
   const handleSearch = (e) => {
 
     setKeyword(e.target.value)
-    console.log("Your filter :", e.target.value)
+
+  }
+
+  const sortAsc = () => {
+    const products = getListProduct()
+
+    
+    products.then(result => result).then(result => {
+
+      let asc = result.sort((a, b) => a.price - b.price)
+      
+      dispatch({
+        type: SETLISTPRODUCT,
+        payload: { listproduct: asc }
+      })
+    })
+
   }
 
 
+  const sortDesc= () => {
+    const products = getListProduct()
+
+    
+    products.then(result => result).then(result => {
+
+      let desc = result.sort((a, b) => b.price - a.price)
+      
+      dispatch({
+        type: SETLISTPRODUCT,
+        payload: { listproduct: desc }
+      })
+    })
+
+  }
+  
 
 
   //Data
@@ -289,12 +421,12 @@ const ProductContextProvider = ({ children, item }) => {
     listcategory, setListCategory,
     keyword, setKeyword,
     loading, setLoading,
-    page, setPage,
+    page, setPage,hotpage,setHotPage,
     total, setTotal,
     limit,
     getListProduct,
     getListCategory,
-    handleChangePage,
+    handleChangePage,handleChangeHotPage,
     handleSearch,
     onChangeText,
     onChangeTextProduct,
@@ -304,7 +436,11 @@ const ProductContextProvider = ({ children, item }) => {
     onSubmitCreateProduct,
     deleteProduct,
     editProduct,
-    getProductByCategory
+    getProductByCategory,
+    sortAsc,sortDesc,
+    getHotProduct,
+    getFlashProduct,
+    productState
 
   }
 
@@ -314,9 +450,9 @@ const ProductContextProvider = ({ children, item }) => {
     <ProductContext.Provider value={ProductContextData}>
       {children}
     </ProductContext.Provider>
-    
+
   )
-  
+
 
 }
 

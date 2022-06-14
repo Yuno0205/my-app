@@ -37,7 +37,7 @@ function Footer() {
                         <a href="#">linkedin</a>
                     </div>
 
-                    <div className="credit">This is my<span> header </span> | all rights reserved</div>
+                    <div className="credit">I'm <span> NhatHao </span> | all rights reserved</div>
 
                 </div>
 

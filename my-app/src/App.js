@@ -100,8 +100,8 @@ function App() {
                                     <Route path='/success' element={<Success></Success>} />
                                     <Route path='/ordersdetail/:id' element={<OrdersDetails></OrdersDetails>} />
                                     <Route path='/product/:id' element={<DetailsProduct></DetailsProduct>} />
-
-
+                                    <Route path='/*' element={<NotFound></NotFound>} />
+                                   
 
                                 </Routes>
                             </NotifyContextProvider>

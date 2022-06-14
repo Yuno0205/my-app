@@ -61,10 +61,10 @@ function Navigation() {
               </li>
 
               <li>
-                <a>
+                <Link to="/login">
                   <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
                   <span class="title">Sign out</span>
-                </a>
+                </Link>
               </li>
 
 

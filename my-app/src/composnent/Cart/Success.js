@@ -16,7 +16,7 @@ const Success = () => {
           </div>
           <div class="modal-body text-center">
             <h4>Great!</h4>
-            <p>Your account has been created successfully.</p>
+            <p>Your order is being processed by the authorities and will be completed as soon as possible, thank you!</p>
             <Link to="/" class="btn btn-success" data-dismiss="modal"><span class="home__back">Home page <i class="fas fa-home">  </i></span> </Link>
           </div>
         </div>

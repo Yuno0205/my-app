@@ -17,7 +17,6 @@ export const getAPI = async (url, payload = {}) => {
     .join("&")
    try {
     const response = await axios.get(`${url}?${qs}`)
-    console.log(' Yourr response is :',response.data)
     return response.data
    } catch (error) {
     console.log(error)

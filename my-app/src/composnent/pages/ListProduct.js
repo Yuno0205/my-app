@@ -9,42 +9,56 @@ import { Link } from "react-router-dom";
 import { Pagination } from "@mui/material";
 
 function ListProduct() {
-    
+
     const [categoriesSelected, setCategoriesSelected] = useState([])
     const [category, setCategory] = useState([])
-     const { listproduct, keyword, listcategory, page, getListProduct ,getListCategory ,getProductByCategory ,total, handleChangePage} = useContext(ProductContext)
-    
-     const onChangeSelected = async (value) => {
-        console.log("category", value)
+    const { keyword, listcategory, page
+        , getListProduct, getListCategory, getProductByCategory,getHotProduct,getFlashProduct,
+        handleChangePage,sortDesc , sortAsc, productState: { listproduct, total } } = useContext(ProductContext)
+
+    const onChangeSelected = async (value) => {
+
         setCategory(value)
-      }
+    }
 
-      useEffect(() => {
+    const allProducts = async () => {
+
+        getListProduct()
+    }
+
+    console.log("List prodduct :", listproduct)
+
+    useEffect(() => {
         setTimeout(() => {
-          onChangeSelected(categoriesSelected)
+            onChangeSelected(categoriesSelected)
         }, 100)
-      }, [categoriesSelected])
+    }, [categoriesSelected])
 
 
 
-     useEffect(() => {
+    useEffect(() => {
         getListProduct()
 
     }, [keyword, listcategory, page])
 
-  
+
 
     useEffect(() => {
         getListCategory()
     }, [])
-    
+
 
     const handleSelectCate = (value) => {
-        
-        
-        console.log("Select" , value)
+
         getProductByCategory(value)
     }
+
+
+
+
+
+
+
 
     return (
         <div>
@@ -60,43 +74,49 @@ function ListProduct() {
                                     <nav className='category'>
                                         <h3 className=' category__heading'>
                                             <i className="category__heading-icon fas fa-list"></i>
-                                            Danh mục
+                                            Categories
                                         </h3>
                                         <ul className='category-list'>
+                                            <li onClick={() => allProducts()} className='category-item category-item--active'>
+                                                <a className='category-item__link'>All</a>
+                                            </li>
                                             {listcategory &&
                                                 listcategory.length > 0 &&
                                                 listcategory.map((category) => {
                                                     return (
                                                         <li onClick={() => handleSelectCate(category._id)} value={category._id} className='category-item category-item--active'>
-                                                            <a  className='category-item__link'>{category.name}</a>
+                                                            <a className='category-item__link'>{category.name}</a>
                                                         </li>
+
                                                     )
                                                 })}
 
 
-                                            
+
+
+
                                         </ul>
                                     </nav>
                                 </div>
 
                                 <div className='grid__column-10'>
                                     <div className='home-filter'>
-                                        <span className='home-filter__label'>Sắp xếp theo</span>
-                                        <button className='home-filter__btn btn'>Phổ biến</button>
-                                        <button className='home-filter__btn btn btn-primary'>Mới nhất</button>
-                                        <button className='home-filter__btn btn'>Bán chạy</button>
+                                        <span className='home-filter__label'>Sorted by</span>
+                                        <button className='home-filter__btn btn'>Best price</button>
+                                        <button className='home-filter__btn btn btn-primary'>Latest</button>
+                                        <button  className='home-filter__btn btn'>Selling</button>
 
                                         <div className='select-input'>
-                                            <span className='select-input__label'>Giá</span>
+                                            <span className='select-input__label'>Price</span>
                                             <i className='select-input__icon fas fa-angle-down'></i>
                                             <ul className='select-input__list' >
-                                                <li className='select-input__item'>
-                                                    <a href='' className='select-input__link'>Giá thấp đến cao</a>
+                                                <li onClick={() => sortAsc()} className='select-input__item'>
+                                                    <a className='select-input__link'>From low to high</a>
                                                 </li>
 
 
-                                                <li className='select-input__item'>
-                                                    <a href='' className='select-input__link'>Giá cao đến thấp</a>
+                                                <li onClick={() => sortDesc()} className='select-input__item'>
+                                                    <a  className='select-input__link'>From high to low</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -104,20 +124,9 @@ function ListProduct() {
 
 
                                         <div className='home-filter__page'>
-                                            <span className='home-filter__page-num'>
-                                                <span className='home-filter__page-current'>1</span>
-                                                /14
-                                            </span>
 
-                                            <div className='home-filter__page-control'>
-                                                <a href='' className='home-filter__page-btn home-filter__page-btn-disable'>
-                                                    <i className='home-filter__page-icon fas fa-angle-left'></i>
-                                                </a>
 
-                                                <a href='' className='home-filter__page-btn'>
-                                                    <i className='home-filter__page-icon fas fa-angle-right'></i>
-                                                </a>
-                                            </div>
+
                                         </div>
                                     </div>
                                     <div className='home-product'>
@@ -128,13 +137,13 @@ function ListProduct() {
                                                     return (
 
                                                         <div className='grid_column-2-4 ' key={index}>
-                                                            <Link style={{textDecoration : 'none'}} to={`/product/${item._id}`}>
+                                                            <Link style={{ textDecoration: 'none' }} to={`/product/${item._id}`}>
                                                                 <div className='home-product-item'>
                                                                     <div className='home-product-item__img' style={{ backgroundImage: `url(${item.images})` }}></div>
                                                                     <h4 className='home-product-item__name'>{item.name}</h4>
                                                                     <div className='home-product-item__price'>
-                                                                        <span className='home-product-item__price-old'>900,000đ</span>
-                                                                        <span className='home-product-item__price-current'>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}đ</span>
+                                                                        <span className='home-product-item__price-old'>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}đ</span>
+                                                                        <span className='home-product-item__price-current'>{(item.price * (100 - item.discount) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} đ</span>
                                                                     </div>
                                                                     <div className='home-product-item__action'>
                                                                         <span className='home-product-item__like home-product-item__like--liked'>
@@ -156,11 +165,11 @@ function ListProduct() {
                                                                     </div>
                                                                     <div className='home-product-item__favourite'>
                                                                         <i className='fas fa-check'></i>
-                                                                        <span>Yêu thích</span>
+                                                                        <span>Favourite</span>
                                                                     </div>
                                                                     <div className='home-product-item__sale-off'>
-                                                                        <span className='home-product-item__sale-off-percent'>43%</span>
-                                                                        <span className='home-product-item__sale-off-lable'>GIẢM</span>
+                                                                        <span className='home-product-item__sale-off-percent'>{item.discount || 0}%</span>
+                                                                        <span className='home-product-item__sale-off-lable'>Discount</span>
                                                                     </div>
                                                                 </div>
                                                             </Link>
@@ -172,57 +181,17 @@ function ListProduct() {
 
 
 
-                                            {/* Product item */}
-
-
-                                            <div className='grid_column-2-4'>
-                                                <div className='home-product-item'>
-                                                    <div className='home-product-item__img' style={{ backgroundImage: ' url("https://cf.shopee.vn/file/e264fd15de3a7e5c61a99c65df61d91b")' }}></div>
-                                                    <h4 className='home-product-item__name'>Giày Air Force 1 All White S.Cấp nguyên bản cho nam nữ, Present Original Sneaker</h4>
-                                                    <div className='home-product-item__price'>
-                                                        <span className='home-product-item__price-old'>1.200.000đ</span>
-                                                        <span className='home-product-item__price-current'>990.000đ</span>
-                                                    </div>
-                                                    <div className='home-product-item__action'>
-                                                        <span className='home-product-item__like home-product-item__like--liked'>
-                                                            <i className="home-product-item__like-icon-empty far fa-heart"></i>
-                                                            <i className="home-product-item__like-icon-fill fas fa-heart"></i>
-                                                        </span>
-                                                        <div className="home-product-item__rating">
-                                                            <i className="home-product-item__star--gold fas fa-star"></i>
-                                                            <i className="home-product-item__star--gold fas fa-star"></i>
-                                                            <i className="home-product-item__star--gold fas fa-star"></i>
-                                                            <i className="home-product-item__star--gold fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                        </div>
-                                                        <span className='home-product-item__sold'>Đã bán 19</span>
-                                                    </div>
-                                                    <div className='home-product-item__origin'>
-                                                        <span className='home-product-item__brand'>Whoo</span>
-                                                        <span className='home-product-item__origin-title'>Nhật Bản</span>
-                                                    </div>
-                                                    <div className='home-product-item__favourite'>
-                                                        <i className='fas fa-check'></i>
-                                                        <span>Yêu thích</span>
-                                                    </div>
-                                                    <div className='home-product-item__sale-off'>
-                                                        <span className='home-product-item__sale-off-percent'>43%</span>
-                                                        <span className='home-product-item__sale-off-lable'>GIẢM</span>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
+                                           
 
                                         </div>
                                     </div>
 
                                     <Pagination
-                                onChange={handleChangePage}
-                                style={{ paddingLeft : "50%"}}
-                                count={total}
-                                color="primary"
-                            />
+                                        onChange={handleChangePage}
+                                        style={{ paddingLeft: "50%" }}
+                                        count={total}
+                                        color="primary"
+                                    />
                                 </div>
                             </div>
                         </div>

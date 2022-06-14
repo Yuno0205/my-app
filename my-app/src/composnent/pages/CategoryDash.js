@@ -109,7 +109,7 @@ function CategoryDash() {
                             <table>
                                 <thead>
                                     <tr>
-                                        <td className='Btext'>ID</td>
+                                       
                                         <td className='Btext'>Name</td>
                                         <td className='Btext'>Description</td>
                                         <td className='Btext'>Action</td>
@@ -121,7 +121,7 @@ function CategoryDash() {
                                         return (
 
                                             <tr key={index}>
-                                                <td><span className='status delivered'>{item._id}</span></td>
+                                                
                                                 <td >{item.name}</td>
                                                 <td >{item.description}</td>
                                                 <td>

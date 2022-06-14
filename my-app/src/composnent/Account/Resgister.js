@@ -1,6 +1,8 @@
 import './cssTest.css'
 import React, { useContext } from 'react'
 import { LoginContext  } from '../../context/LoginContext';
+import { Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -39,6 +41,7 @@ function Resgister() {
                                         </div>
                                         <div className="form-group">
                                             <button onClick={handleResgister} type="submit" className="form-control btn btn-primary submit px-3">Resgister</button>
+                                            <ToastContainer/>
 
                                         </div>
                                         <div className="form-group d-md-flex">
@@ -49,7 +52,7 @@ function Resgister() {
                                                 </label>
                                             </div>
                                             <div className="w-50 text-md-right">
-                                                <a style={{ color: 'white' }} href="#" >Forgot Password</a>
+                                                <Link style={{ color: 'white' }} to="/login" >Have a account ?</Link>
                                             </div>
                                         </div>
                                     </form>

@@ -53,6 +53,8 @@ module.exports = {
       throw error
     }
 
+    
+
     // try {
     //   const { keyword, categoryList, limit = 2, page = 1 } = req.query
     //   const conditions = {}
@@ -67,6 +69,68 @@ module.exports = {
     // } catch (error) {
     //   throw error
     // }
+
+  },
+
+  getHotProducts: async (req, res, next) => {
+    try {
+      const { keyword, categoryList, limit = 4, hotpage = 1 } = req.query
+      const conditions = {discount: { $gte: 20  },discount: { $lte: 50 } }
+
+      if (keyword) {
+        conditions.name = { $regex: '.*' + keyword + '.*' ,$options: 'i'}
+      }
+
+      if(categoryList) {
+        conditions.category = { $in : categoryList.split(',')  }
+      }
+      const data = await ProductModel.find(conditions)
+      .populate('category', '-__v')
+      .skip((hotpage - 1) * limit)
+      .limit(limit)
+      .sort({ createAt: -1 })
+      const total = await ProductModel.count(conditions)
+      
+      return res.json({
+        data: data,
+        totalPage: Math.round(total / limit),
+        
+      })
+     
+    } catch (error) {
+      throw error
+    }
+
+  },
+  
+  getFlashProducts: async (req, res, next) => {
+    try {
+      const { keyword, categoryList, limit = 8, page = 1 } = req.query
+      const conditions = {discount: { $gte: 50  } }
+
+      if (keyword) {
+        conditions.name = { $regex: '.*' + keyword + '.*' ,$options: 'i'}
+      }
+
+      if(categoryList) {
+        conditions.category = { $in : categoryList.split(',')  }
+      }
+      const data = await ProductModel.find(conditions)
+      .populate('category', '-__v')
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createAt: -1 })
+      const total = await ProductModel.count(conditions)
+      
+      return res.json({
+        data: data,
+        totalPage: Math.round(total / limit),
+        
+      })
+     
+    } catch (error) {
+      throw error
+    }
 
   },
 

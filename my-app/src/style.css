@@ -101,6 +101,23 @@ header .icons a {
   margin-left: 1.5rem;
 }
 
+.fas.fa-heart:hover {
+  color: var(--orange);
+  
+}
+
+.header__cart-icon:hover{
+  color: var(--orange)!important;
+}
+
+.header__navbar-item.header__navbar-user:hover{
+  color: #05053a;
+}
+
+.header__navbar-user-item:hover{
+  color: #333 !important;
+}
+
 .icons {
   display: flex;
 
@@ -116,7 +133,7 @@ header .icons a {
 
 
 header .icons a:hover {
-  color: var(--orange);
+  color: #fff;
 }
 
 
@@ -298,6 +315,7 @@ header .icons a:hover {
 }
 
 .header__cart-view-cart {
+  
   font-size: 1.5rem !important;
   text-align: center;
   float: right;
@@ -309,7 +327,7 @@ header .icons a:hover {
 }
 
 .header__cart-view-cart:hover {
-  background-color: #f05d41;
+  background-color: rgb(253 126 20);
 }
 
 
@@ -398,7 +416,7 @@ header .icons a:hover {
 .header__navbar-user-item {}
 
 .header__navbar-user-item a:hover {
-  background-color: #fafafa;
+  background-color: transparent;
 
 }
 

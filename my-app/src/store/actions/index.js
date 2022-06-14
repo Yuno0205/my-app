@@ -2,6 +2,8 @@
 export const ADD_CART = "ADD_CART"
 export const REMOVE_CART = "REMOVE_CART"
 export const FETCH_CART = "FETCH_CART"
+export const DECREASE = "DECREASE"
+export const INCREASE = "INCREASE"
 export const USER_LOGIN = "USER_LOGIN"
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS"
 
@@ -17,6 +19,15 @@ export const addCart = (payload) => {
 
 export const removeCart = (payload) => {
   return {type : REMOVE_CART , payload}
+}
+
+export const increaseItem = (payload) => {
+  console.log("Payload quan",payload.quantity)
+  return {type : INCREASE , payload}
+}
+
+export const decreaseItem = (payload) => {
+  return {type : DECREASE , payload}
 }
 
 export const UserLoginSuccess = (payload) => {

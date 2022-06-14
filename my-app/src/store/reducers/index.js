@@ -1,14 +1,13 @@
 
-import { ADD_CART, REMOVE_CART } from "../actions"
+import { ADD_CART, DECREASE, INCREASE, REMOVE_CART } from "../actions"
 
 
 export const cartReducer = (state, action) => {
   switch (action.type) {
     case ADD_CART: {
-
+      console.log("Adđ")
       // them moi
       const { id } = action.payload
-      console.log("ID", id)
       const index = state.cart.findIndex((product) => product.id === id)
       // đã có trong cart state
       if (index !== -1) {
@@ -41,16 +40,51 @@ export const cartReducer = (state, action) => {
     case REMOVE_CART:
       {
         const { id } = action.payload
-        console.log("ID xoas ", id)
+        
         const newCart = state.cart.filter((item) => item.id !== id);
 
         return {
           ...state,
-          cart : newCart,
+          cart: newCart,
         }
       }
+
+    case INCREASE: {
+      console.log("Case tăng số lượng")
+      console.log("Thử payload" , action.payload)
+      const cloneCartNew = state.cart.slice()
+      const ind = state.cart.indexOf(action.payload)
+   
+      // cloneCartNew[ind].quantity += 1;
+
+      console.log(cloneCartNew[ind].quantity += +1)
+      return {
+        ...state,
+        cart : cloneCartNew
+      }
+    }
+
+    case DECREASE: {
+     
+      const cloneCartNew = state.cart.slice()
+      const ind = state.cart.indexOf(action.payload)
+   
+      // cloneCartNew[ind].quantity += 1;
+
+      console.log(cloneCartNew[ind].quantity += -1)
+
+
+      if (cloneCartNew[ind].quantity === 0) cloneCartNew[ind].quantity = 1;
+     
+      return {
+        ...state,
+        cart : cloneCartNew
+      }
+    }
       break
-    default: throw new Error("Invalid action")
+    default: return state
 
   }
+
+
 }

@@ -17,8 +17,10 @@ module.exports = {
   },
   getList: async (req, res, next) => {
     try {
-      const data = await OrderModel.find()
+      const data = await OrderModel.find().populate('customer' , '__v')
+      
       return res.json(data)
+     
     } catch (error) {
       throw error
     }

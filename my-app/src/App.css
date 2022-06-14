@@ -45,8 +45,9 @@ html {
 
 
 .btn.btn-primary{
-  color: var(--white-color);
-  background-color: var(--primary-color);
+  color: #2c2c54;
+  background-color: var(--white-color);
+  border: none;
 }
 
 .btn.btn--disabled {
@@ -67,6 +68,8 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
+  
   
 }
 
@@ -98,7 +101,7 @@ html {
 
 .select-input:hover .select-input__list{
   display: block;
-  
+ 
 
 }
 
@@ -111,7 +114,8 @@ html {
 }
 
 .select-input__link:hover {
- color: var(--primary-color);
+ color: var(--primary-color) !important;
+ cursor: pointer;
  
 }
 
@@ -277,6 +281,12 @@ html {
 .home-filter__btn{
   min-width: 90px;
   margin-right: 12px;
+}
+
+.home-filter__btn:hover {
+  border: 1px solid #2c2c54;
+  background: #fd7e14;
+  color: #fff !important;
 }
 
 .home-filter__page{
@@ -482,7 +492,7 @@ i.home-product-item__like-icon-fill {
   top: 10px;
   left: -4px;
   color: var(--white-color);
-  background-color: var(--primary-color);
+  background-color: #2c2c54;
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.6rem;
@@ -528,7 +538,7 @@ i.home-product-item__like-icon-fill {
 }
 
 .home-product-item__sale-off-percent {
- color: #ee4d3d;
+ color: #f63d30;
  font-weight: 600;
  
  font-size: 1.2rem;

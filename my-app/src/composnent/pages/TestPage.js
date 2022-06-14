@@ -28,7 +28,7 @@ function TestPage() {
                             <table>
                                 <thead>
                                     <tr>
-                                        <td className='Btext'>ID</td>
+                                        <td className='Btext'>Email</td>
                                         <td className='Btext'>Images</td>
                                         <td className='Btext'>Username</td>
                                         <td className='Btext'>Date</td>
@@ -41,7 +41,7 @@ function TestPage() {
                                     {listusers && listusers.length && listusers.map((list, index) => {
                                         return (
                                             <tr key={list._id}>
-                                                <td>{list._id}</td>
+                                                <td>{list.email}</td>
                                                 <td>
                                                     <div className='bxImg'>
                                                         <img src={list.img || "http://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png"} ></img>

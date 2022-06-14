@@ -2826,7 +2826,7 @@ textarea.form-control.is-invalid {
 }
 
 .btn {
-  display: inline-block;
+ 
   font-weight: 400;
   color: #212529;
   text-align: center;
@@ -11916,15 +11916,15 @@ textarea.form-control {
 }
 
 .btn.btn-primary {
-  background: #fbceb5;
-  border: 1px solid #fbceb5;
+  background: #fff;
+  border: 1px solid #2c2c54;
   color: #000;
 }
 
 .btn.btn-primary:hover {
-  border: 1px solid #fbceb5;
-  background: transparent;
-  color: #fbceb5;
+  border: 1px solid #2c2c54;
+  background: #fd7e14;
+  color: #ffff;
 }
 
 .btn.btn-primary.btn-outline-primary {

@@ -12,11 +12,13 @@ import { Pagination } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { cartReducer } from '../../store/reducers'
+import { addCart } from "../../store/actions";
 
 
 
 
-function Home({ reducer }) {
+
+function Home() {
     const notify = () => toast.success("Congratulations! You have successfully added 1 product to your cart!");
 
     // let {toast} = useContext(NotifyContext)
@@ -36,28 +38,39 @@ function Home({ reducer }) {
 
     // }
 
-    const { listproduct, listcategory, handleChangePage, total, getListProduct, keyword, page } = useContext(ProductContext)
+    const { listcategory, getListProduct, keyword, page,hotpage, handleChangePage,handleChangeHotPage,
+         productState: { listproduct, total , hotproduct , totalHot ,flashproduct,totalFlash} ,
+          getHotProduct , getFlashProduct } = useContext(ProductContext)
+    
     const [cart, setCart] = useState([]);
+    const [state, dispatch] = useGlobalContext()
+
+   
 
     const handleClick = (item) => {
         if (cart.indexOf(item) !== -1) return;
         setCart([...cart, item]);
     };
 
-    const handleChange = (item, d) => {
-        const ind = cart.indexOf(item);
-        const arr = cart;
-        arr[ind].amount += d;
-
-        if (arr[ind].amount === 0) arr[ind].amount = 1;
-        setCart([...arr]);
-    };
 
 
     useEffect(() => {
         getListProduct()
+        
 
     }, [keyword, listcategory, page])
+
+    useEffect(() => {
+        getHotProduct()
+        
+
+    }, [keyword, hotpage])
+
+    useEffect(() => {
+       getFlashProduct()
+        
+
+    }, [keyword])
 
 
     const [decription, setDecription] = useState("Underfoot the Free Metcon 4 features Nike Free technology in the forefoot creates flexibility for sprints and agility training. The cushioning technology features a soft core surrounded by firmer foam for extra stability. Finished with a wide heel and rubber tread in high-wear areas they deliver a stable base for your weights training.")
@@ -102,7 +115,7 @@ function Home({ reducer }) {
 
         <div>
 
-            <Header cart={cart} setCart={setCart} handleChange={handleChange}></Header>
+            <Header cart={cart} setCart={setCart} ></Header>
 
             <section className="home" id="home">
 
@@ -191,16 +204,16 @@ function Home({ reducer }) {
                 <div class="main">
                     <section className='women section' id='women'>
 
-                        <h2 className='section-title'> List</h2>
+                        <h2 className='section-title'> selling products</h2>
 
                         <div className='women_container bd-grid'>
 
-                            {listproduct && listproduct.length > 0 ? (
-                                listproduct.map((item, index) => {
+                            {hotproduct && hotproduct.length > 0 ? (
+                                hotproduct.map((item, index) => {
                                     return (
 
 
-                                        <MyProductList  key={index} {...item} handleClick={handleClick}></MyProductList>
+                                        <MyProductList key={index} {...item} handleClick={handleClick}></MyProductList>
 
 
                                     )
@@ -215,9 +228,9 @@ function Home({ reducer }) {
                         </div>
                     </section>
                     <Pagination
-                        onChange={handleChangePage}
-                        style={{ paddingLeft: "50%" }}
-                        count={total}
+                        onChange={handleChangeHotPage}
+                        style={{ paddingLeft: "43%" }}
+                        count={totalHot}
                         color="primary"
                     />
                 </div>
@@ -228,140 +241,62 @@ function Home({ reducer }) {
 
             <section className="products" id="products">
 
-                <h1 className="heading"> latest <span>products</span> </h1>
+                <h1 className="heading"> flash <span>sale</span> </h1>
 
                 <div className="box-container">
+                    {flashproduct && flashproduct.length > 0 && flashproduct.map((item, index) => {
+                        return (
+                            <div className="box">
+                                <div className="icons">
+                                    <a href="#" className="fas fa-heart"></a>
+                                    <a href="#" className="fas fa-share"></a>
+                                    <a href="#" className="fas fa-eye"></a>
+                                </div>
+                                <img src={item.images} alt="" />
+                                <div className="content">
+                                    <h3>{item.name}</h3>
+                                    <div className="price">{(item.price * (100 - item.discount) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}đ  <span>{item.price}đ</span></div>
+                                    <div className="stars">
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="far fa-star"></i>
+                                    </div>
+                                    <a onClick={() => {
+                                        dispatch(
+                                            addCart({
 
-                    <div className="box">
-                        <div className="icons">
-                            <a href="#" className="fas fa-heart"></a>
-                            <a href="#" className="fas fa-share"></a>
-                            <a href="#" className="fas fa-eye"></a>
-                        </div>
-                        <img src="images/product-1.png" alt="" />
-                        <div className="content">
-                            <h3>nike shoes</h3>
-                            <div className="price">$120.99 <span>$150.99</span></div>
-                            <div className="stars">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="far fa-star"></i>
-                            </div>
-                            <a href="#" className="btnn">add to cart</a>
-                        </div>
-                    </div>
+                                                id: item._id,
+                                                name: item.name,
+                                                price: item.price,
+                                                images: item.images.length > 0 ? item.images : "https://via.placeholder.com/300",
+                                                quantity: 1,
+                                            }),
+                                            notify()
 
-                    <div className="box">
-                        <div className="icons">
-                            <a href="#" className="fas fa-heart"></a>
-                            <a href="#" className="fas fa-share"></a>
-                            <a href="#" className="fas fa-eye"></a>
-                        </div>
-                        <img src="images/product-2.png" alt="" />
-                        <div className="content">
-                            <h3>nike shoes</h3>
-                            <div className="price">$120.99 <span>$150.99</span></div>
-                            <div className="stars">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="far fa-star"></i>
+                                        )
+                                    }} className="btnn">add to cart</a>
+                                </div>
                             </div>
-                            <a href="#" className="btnn">add to cart</a>
-                        </div>
-                    </div>
+                        )
+                    })
 
-                    <div className="box">
-                        <div className="icons">
-                            <a href="#" className="fas fa-heart"></a>
-                            <a href="#" className="fas fa-share"></a>
-                            <a href="#" className="fas fa-eye"></a>
-                        </div>
-                        <img src="images/product-3.png" alt="" />
-                        <div className="content">
-                            <h3>nike shoes</h3>
-                            <div className="price">$120.99 <span>$150.99</span></div>
-                            <div className="stars">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="far fa-star"></i>
-                            </div>
-                            <a href="#" className="btnn">add to cart</a>
-                        </div>
-                    </div>
+                    }
 
-                    <div className="box">
-                        <div className="icons">
-                            <a href="#" className="fas fa-heart"></a>
-                            <a href="#" className="fas fa-share"></a>
-                            <a href="#" className="fas fa-eye"></a>
-                        </div>
-                        <img src="images/product-4.png" alt="" />
-                        <div className="content">
-                            <h3>nike shoes</h3>
-                            <div className="price">$120.99 <span>$150.99</span></div>
-                            <div className="stars">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="far fa-star"></i>
-                            </div>
-                            <a href="#" className="btnn">add to cart</a>
-                        </div>
-                    </div>
 
-                    <div className="box">
-                        <div className="icons">
-                            <a href="#" className="fas fa-heart"></a>
-                            <a href="#" className="fas fa-share"></a>
-                            <a href="#" className="fas fa-eye"></a>
-                        </div>
-                        <img src="images/product-5.png" alt="" />
-                        <div className="content">
-                            <h3>nike shoes</h3>
-                            <div className="price">$120.99 <span>$150.99</span></div>
-                            <div className="stars">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="far fa-star"></i>
-                            </div>
-                            <a href="#" className="btnn">add to cart</a>
-                        </div>
-                    </div>
 
-                    <div className="box">
-                        <div className="icons">
-                            <a href="#" className="fas fa-heart"></a>
-                            <a href="#" className="fas fa-share"></a>
-                            <a href="#" className="fas fa-eye"></a>
-                        </div>
-                        <img src="images/product-6.png" alt="" />
-                        <div className="content">
-                            <h3>nike shoes</h3>
-                            <div className="price">$120.99 <span>$150.99</span></div>
-                            <div className="stars">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="far fa-star"></i>
-                            </div>
-                            <a href="#" className="btnn">add to cart</a>
-                        </div>
-                    </div>
 
 
                 </div>
 
             </section>
+            <Pagination
+               
+                style={{ paddingLeft: "43%" }}
+                count={totalFlash}
+                color="primary"
+            />
 
 
 
@@ -390,8 +325,8 @@ function Home({ reducer }) {
                             <i className="fas fa-star"></i>
                             <i className="far fa-star"></i>
                         </div>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta facilis praesentium odit voluptas illum iure libero quis fuga commodi. Autem.</p>
-                        <div className="price">$80.99 <span>$120.99</span></div>
+                        <p>Nike Air is our iconic innovation that uses pressurized air in a durable, flexible membrane to provide lightweight cushioning. The air compresses on impact and then immediately returns to its original shape and volume, ready for the next impact.</p>
+                        <div className="price">1,500,000 VND <span>2,000,000 VND</span></div>
                         <a href="#" className="btnn">add to cart</a>
                     </div>
                 </div>
@@ -417,8 +352,8 @@ function Home({ reducer }) {
                             <i className="fas fa-star"></i>
                             <i className="far fa-star"></i>
                         </div>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta facilis praesentium odit voluptas illum iure libero quis fuga commodi. Autem.</p>
-                        <div className="price">$80.99 <span>$120.99</span></div>
+                        <p>Nike Air is our iconic innovation that uses pressurized air in a durable, flexible membrane to provide lightweight cushioning. The air compresses on impact and then immediately returns to its original shape and volume, ready for the next impact.</p>
+                        <div className="price">1,999,000 VND <span>$3,000,000 VND</span></div>
                         <a href="#" className="btnn">add to cart</a>
                     </div>
                 </div>
@@ -444,8 +379,8 @@ function Home({ reducer }) {
                             <i className="fas fa-star"></i>
                             <i className="far fa-star"></i>
                         </div>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta facilis praesentium odit voluptas illum iure libero quis fuga commodi. Autem.</p>
-                        <div className="price">$80.99 <span>$120.99</span></div>
+                        <p>Nike Air is our iconic innovation that uses pressurized air in a durable, flexible membrane to provide lightweight cushioning. The air compresses on impact and then immediately returns to its original shape and volume, ready for the next impact.</p>
+                        <div className="price">2,100,000 VND <span>2,500,000 VND</span></div>
                         <a href="#" className="btnn">add to cart</a>
                     </div>
                 </div>

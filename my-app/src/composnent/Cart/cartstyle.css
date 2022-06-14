@@ -33,6 +33,7 @@
 .btn__change{
     margin: 0px 8px;
     background: none;
+	cursor: pointer;
 }
 
 .fa.fa-times{

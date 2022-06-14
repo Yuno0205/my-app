@@ -7,9 +7,12 @@ import Header from '../container/Header'
 import Footer from '../container/Footer'
 import './styleOD.css'
 import { addCart } from '../../store/actions'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const DetailsProduct = () => {
     const [state, dispatch] = useGlobalContext()
-
+    const notify = () => toast.success("Congratulations! You have successfully added 1 product to your cart!");
     const [product, setProduct] = useState([])
 
     const { id } = useParams()
@@ -55,7 +58,7 @@ const DetailsProduct = () => {
                                 </div>
                                 <div class="row mb-20">
                                     <div class="col-sm-12">
-                                        <div class="price font-alt"><span class="amount">Price :   {product.price}đ</span></div>
+                                        <div class="price font-alt"><span class="amount">Price :   {product.price * (100 - product.discount) /100 }đ</span></div>
                                     </div>
                                 </div>
                                 <div class="row mb-20">
@@ -71,13 +74,17 @@ const DetailsProduct = () => {
                                         addCart({
                                             id: product._id,
                                             name : product.name,
-                                            price : product.price,
+                                            price : product.price * (100 - product.discount) /100 ,
                                             images: product.images.length > 0 ? product.images : "https://via.placeholder.com/300",
                                             quantity: 1,
-                                        })
+                                            
+                                        }),
+                                        notify()
+                                        
                                     )} class="col-sm-8"><a class="btnn " >Add To Cart</a></div>
                                 </div>
-                                <div class="row mb-20">
+                                <ToastContainer/>
+                                                                <div class="row mb-20">
                                     <div class="col-sm-12">
                                         <div class="product_meta">Categories:  <a >   {product.category}</a>
                                         </div>

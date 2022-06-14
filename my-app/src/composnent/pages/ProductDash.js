@@ -27,10 +27,11 @@ function getSelectedCate() {
 
 function ProductDash() {
 
-    const { listproduct, listcategory, keyword, page,
-        getListProduct, handleChangePage,total, getListCategory, 
+    const { listcategory, keyword, page,
+        getListProduct, handleChangePage, getListCategory, 
         postProduct, setPostProduct, onEdit, selectedPost,
-        onSubmitCreateProduct, onChangeTextProduct, deleteProduct , editProduct } = useContext(ProductContext)
+        onSubmitCreateProduct, onChangeTextProduct, deleteProduct , editProduct 
+        , productState : {listproduct , total} } = useContext(ProductContext)
 
         const warn = () => toast.warn("Please fill all fields !");
         const warn1 = () => toast.warn("Please choose at least 1 size for the product !");
@@ -53,6 +54,7 @@ function ProductDash() {
         var name = inputData[0].value
         var price = inputData[1].value
         var images = inputData[15].value
+        var discount = inputData[16].value
 
         var selectedCategory = document.getElementById('listcate').value
 
@@ -76,8 +78,6 @@ function ProductDash() {
 
 
 
-
-
         if (color1) {
             color = "Black"
         } else if (color2) {
@@ -88,10 +88,6 @@ function ProductDash() {
         } else {
             color = "Other"
         }
-
-
-        console.log("Kiểu :", typeof (color))
-        console.log("Kiểu cate:", typeof (selectedCategory))
 
 
 
@@ -132,8 +128,8 @@ function ProductDash() {
             color: color,
             size: arrSize,
             category: selectedCategory,
-            images: images
-
+            images: images,
+            discount : discount
         }
 
        
@@ -200,11 +196,12 @@ function ProductDash() {
                             <table>
                                 <thead>
                                     <tr>
-                                        <td className='Btext'>ID</td>
+                                       
                                         <td className='Btext'>Name</td>
                                         <td className='Btext'>Price</td>
                                         <td className='Btext'>Color</td>
                                         <td className='Btext'>Size</td>
+                                        <td className='Btext'>Discount</td>
                                         <td className='Btext'>Category</td>
                                         <td className='Btext'>Action</td>
 
@@ -215,7 +212,7 @@ function ProductDash() {
                                         return (
 
                                             <tr >
-                                                <td>#{item._id}</td>
+                                                
                                                 <td>
                                                     <div className='bxImg'>
                                                         <img src={item.images|| "https://us.123rf.com/450wm/urfandadashov/urfandadashov1806/urfandadashov180601827/150417827-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg?ver=6"}></img>
@@ -228,6 +225,7 @@ function ProductDash() {
                                                 <td>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} VND</td>
                                                 <td>{item.color || "No"} </td>
                                                 <td>{item.size.join(",")}</td>
+                                                <td>{item.discount || 0} %</td>
                                                 <td><span className='status delivered'>{item.category.name || "No"}</span></td>
                                                 <td>
                                                     <i onClick={() => onClickEdit(item )} style={{ marginRight: '10px' }} class="fas fa-tools"></i>
@@ -306,8 +304,7 @@ function ProductDash() {
 
                                         </select>
 
-
-
+                    
 
                                     </div>
 
@@ -355,8 +352,18 @@ function ProductDash() {
                                         <label className='auth-form__label'>Product image</label>
                                         <input value={postProduct.images} onChange={onChangeTextProduct} type="text" className='auth-form__input' name='images' placeholder='   Product image'></input>
                                     </div>
+                                    
 
                                 </div>
+                                <div className='auth-form__form'>
+                                    <div className='auth-form__group'>
+                                        <label className='auth-form__label'>Discount (%)</label>
+                                        <input value={postProduct.discount} onChange={onChangeTextProduct} type="text" className='auth-form__input' name='discount' placeholder='Discount'></input>
+                                    </div>
+                                    
+
+                                </div>
+                               
                             </div>
                         </div>
 

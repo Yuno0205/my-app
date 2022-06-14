@@ -1,5 +1,5 @@
 const express = require('express')
-const { getListProducts, createProduct, getDetail, updateProduct, removeProduct, getProductByCate } = require('../controllers/ProductController')
+const { getListProducts, createProduct, getDetail, updateProduct, removeProduct, getProductByCate, getHotProducts, getFlashProducts } = require('../controllers/ProductController')
 
 const productRoute = express.Router()
 /**
@@ -9,6 +9,14 @@ const productRoute = express.Router()
 
 productRoute.get('/', (req, res, next) => {
   getListProducts(req,res,next)
+})
+
+productRoute.get('/hot', (req, res, next) => {
+  getHotProducts(req,res,next)
+})
+
+productRoute.get('/flash', (req, res, next) => {
+  getFlashProducts(req,res,next)
 })
 
 productRoute.get('/bycate/:id', (req, res, next) => {

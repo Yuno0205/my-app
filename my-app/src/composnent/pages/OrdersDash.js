@@ -4,6 +4,8 @@ import './styleDash.css'
 import { OrdersContext } from '../../context/OrdersContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
+import { style } from '@mui/system';
 
 
 
@@ -121,7 +123,7 @@ function OrdersDash() {
                                     <tr>
 
                                         <td className='Btext'>Orders name</td>
-                                        <td className='Btext'>Customer</td>
+                                        
                                         <td className='Btext'>Phone</td>
                                         <td className='Btext'>Email</td>
                                         <td className='Btext'>Status</td>
@@ -132,6 +134,7 @@ function OrdersDash() {
                                 <tbody>
                                     {listorders && listorders.length && listorders.map((item, index) => {
                                         const st = item.status.toLowerCase().split(" ").join('')
+                                        console.log("Items" , item.customer)
                                         return (
                                             <tr >
                                                 <td>
@@ -140,13 +143,14 @@ function OrdersDash() {
                                                         <span>{item.name}</span>
                                                     </div>
                                                 </td>
-                                                <td>{item.customer}đ</td>
+                                                
                                                 <td>{item.phone || "No"} </td>
                                                 <td>{item.email + ','}</td>
                                                 <td><span className={`status ${st || "delivered"}`}>{item.status || "No"}</span></td>
                                                 <td>
-                                                    <i onClick={() => onClickEdit(item)} style={{ marginRight: '10px' }} class="fas fa-tools"></i>
-                                                    <i class="fas fa-info-circle"></i>
+                                                    {st ==  "retured" ? <i  style={{ marginRight: '10px' , display : "none"} } class="fas fa-tools"></i> : <i onClick={() => onClickEdit(item)} style={{ marginRight: '10px' } } class="fas fa-tools"></i>}
+                                                    
+                                                    <Link to="/*" class="fas fa-info-circle"></Link>
                                                 </td>
 
                                             </tr>

@@ -2,13 +2,23 @@ import './cartstyle.css'
 import { useGlobalContext } from "../../context/globalContext"
 import { Link } from "react-router-dom"
 import { getTotalCart } from "../../utils/funtions"
-import { removeCart } from '../../store/actions'
+import { decreaseItem, increaseItem, removeCart } from '../../store/actions'
+import { useEffect, useState } from 'react'
 
 const Cart = () => {
-    const [state, dispath] = useGlobalContext()
-    const { cart = [] } = state
+    const [state, dispatch] = useGlobalContext()
+    const { cart } = state
+
     console.log("state", state.cart)
+
     const totalPrice = cart.reduce((acc,next)=>acc+=next.quantity*next.price,0)
+
+    console.log("State" , state)
+
+
+    
+    
+     
     return (
         
         
@@ -50,16 +60,22 @@ const Cart = () => {
                                                         <h5 class="product-title font-alt">{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}đ</h5>
                                                     </td>
                                                     <td>
-                                                        <span>{item.quantity} <button class="btn__change"><i class="fas fa-plus"></i></button>
-                                                          <button class="btn__change"><i class="fas fa-minus"></i></button>
+                                                        <span>{item.quantity} <a onClick={() => dispatch(
+                                                            decreaseItem(item)
+                                                        )} class="btn__change">
+                                                            <i class="fas fa-minus"></i>
+                                                        </a>
+                                                          <a  onClick={() => dispatch(
+                                                            increaseItem(item)
+                                                        )} class="btn__change"><i class="fas fa-plus"></i></a>
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <h5 class="product-title font-alt">{(item.quantity * item.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}đ</h5>
                                                     </td>
-                                                    <td onClick={() => dispath(
+                                                    <td onClick={() => dispatch(
                                                             removeCart({id : item.id})
-                                                        ) } class="pr-remove"><a href="#" title="Remove"><i class="fa fa-times"></i></a></td>
+                                                        ) } class="pr-remove"><a  title="Remove"><i class="fa fa-times"></i></a></td>
                                                 </tr>
                                             )
                                         })}

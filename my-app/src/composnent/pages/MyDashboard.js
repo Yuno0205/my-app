@@ -4,6 +4,8 @@ import Navigation from './Navigation';
 import './styleDash.css'
 import { LoginContext } from '../../context/LoginContext';
 import { OrdersContext } from '../../context/OrdersContext';
+import { ProductContext } from '../../context/ProductContext';
+import { useState } from 'react';
 
 function toggleMenu() {
 
@@ -21,10 +23,13 @@ function toggleMenu() {
 
 function MyDashboard() {
   const user = JSON.parse(localStorage.getItem("User"))
-
+  const [recent , setRecent] = useState([])
 
   const { listusers, setListUsers, getListUsers } = useContext(LoginContext)
-  const { getListOrders, listorders, setListOrders, } = useContext(OrdersContext)
+  const { getListOrders, listorders, setListOrders } = useContext(OrdersContext)
+ 
+
+  
 
   let totalRevenue = 0;
 
@@ -33,9 +38,11 @@ function MyDashboard() {
   
 
   }
-  console.log("Orders" , listorders)
-  
 
+  
+  
+ 
+  
 
   useEffect(() => {
     getListUsers()
@@ -69,7 +76,7 @@ function MyDashboard() {
             <div className='cardBox'>
               <div className='cardd'>
                 <div>
-                  <div className='numbers'>{"1234565".replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
+                  <div className='numbers'>{"39".replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
                   <div className='cardName'>The number of products</div>
                 </div>
 
@@ -102,7 +109,7 @@ function MyDashboard() {
 
               <div className='cardd'>
                 <div>
-                  <div className='numbers'>{totalRevenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} VND</div>
+                  <div className='numbers'>{totalRevenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}đ</div>
                   <div className='cardName'>Earning</div>
                 </div>
 
@@ -116,7 +123,7 @@ function MyDashboard() {
               <div className='recentOrders'>
                 <div className='cardHeader'>
                   <h2>Recent Oders</h2>
-                  <a href='' className='btn'>View all</a>
+                  <Link to='/dashboard/orders' className='btn'>View all</Link>
                 </div>
                 <table>
                   <thead>
@@ -129,7 +136,7 @@ function MyDashboard() {
                   </thead>
                   <tbody>
                     {listorders && listorders.length > 0  &&
-                      listorders.map((item , index) => {
+                      (listorders.reverse()).map((item , index) => {
                         const st = item.status.toLowerCase().split(" ").join('')
                         return(
                           <tr>

@@ -20,10 +20,12 @@ module.exports = {
   
           })
         }else{
-          return res.status(500).json({ message: 'Save user failed ! Account is exist' })
+          console.log("E-mail is being used")
+          return res.status(409).json({ message: 'Save user failed ! Error :' })
         }
       } catch (error) {
-        return res.status(500).json({ message: 'Save user failed ! Account is exist' })
+       
+        return res.status(500).json({ message: 'Save user failed ! Error :' +error})
       }
      
 

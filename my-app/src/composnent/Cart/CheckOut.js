@@ -7,17 +7,26 @@ import { LoginContext } from '../../context/LoginContext'
 import { OrdersContext } from '../../context/OrdersContext'
 import { Link, useNavigate } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
+import { removeCart } from '../../store/actions'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CheckOut = () => {
-
+    const notify = () => toast.success("Thank you for your order ! Your order will be delivered to the regulatory authority and will be completed soon!");
+    const notify2 = () => toast.info("You have not purchased any products !Please purchase at least 1 product to proceed with payment!!");
+    const notify3 = () => toast.warn("Please fill out all fields !");
+    
     
     const navigate = useNavigate()
     const {orders , setOrders ,onSubmitCreateOrders} = useContext(OrdersContext)
     const username = JSON.parse(localStorage.getItem("User")).username
-    const id = JSON.parse(localStorage.getItem("User")).id
+  
+    const userInfo = JSON.parse(localStorage.getItem("User")) || { }
+    
+    
     const email = JSON.parse(localStorage.getItem("User")).email
 
-    const [state, dispatch] = useGlobalContext()
+    const [state, dispath] = useGlobalContext()
     const { cart = [] } = state
     var sum = 0;
     // const sumTotal = () => {
@@ -38,7 +47,7 @@ const CheckOut = () => {
 
         var name = inputData[1].value
         var email = inputData[2].value
-        var customer = id
+        
         var shipping_address = inputData[4].value
         var phone = inputData[5].value
         var total = inputData[6].value
@@ -55,6 +64,12 @@ const CheckOut = () => {
         for(var i = 0 ; i < cart.length ; i ++) {
             items.push(cart[i])
         }
+        
+        var customerInfo = [];
+        customerInfo.push(userInfo)
+
+        console.log("Custormer:" , customerInfo)
+
       
         console.log("Items " , items)
 
@@ -62,7 +77,7 @@ const CheckOut = () => {
 
         var infoOrders =  {
             name : name,
-            customer : customer,
+            customer : {_id : userInfo.id , username : userInfo.username },
             total : totalPrice ,
             shipping_address : shipping_address,
             phone : phone ,
@@ -74,10 +89,17 @@ const CheckOut = () => {
         console.log("Info orders :" , infoOrders)
 
         if(name == "" || shipping_address =="" || phone == "" || email == ""){
-           alert("Please complete all information !")
+           notify3()
            return
+        }else if(userInfo.id == null || userInfo.id == undefined){
+            alert("You are not logged in, log in now?")
+            navigate('/login')
+        }else if(cart.length <= 0){
+            notify2()
+            return
         }else{
             onSubmitCreateOrders(infoOrders)
+            notify()
             navigate('/success')
         }
 
@@ -136,10 +158,10 @@ const CheckOut = () => {
                                 </div>
                             <div>
                             <input onClick={() => onSubmitForm()} type="submit" value="Continue to CheckOut" class="btnk" />
+                            <ToastContainer/>
+                            <Link to="/cart" class="btnn"> Back to cart</Link>
                             </div>
                              
-                                
-                          
                         </div>
                     </div>
                     <div class="col-25">
@@ -173,7 +195,9 @@ const CheckOut = () => {
                                                     <td>
                                                         <h5 class="product-title font-alt">{item.quantity * item.price}đ</h5>
                                                     </td>
-                                                    <td class="pr-remove"><a href="#" title="Remove"><i class="fa fa-times"></i></a></td>
+                                                    <td onClick={() => dispath(
+                                                            removeCart({id : item.id})
+                                                        ) }  class="pr-remove"><a  title="Remove"><i class="fa fa-times"></i></a></td>
                                                 </tr>
                                             )
                                         })}

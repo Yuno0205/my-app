@@ -15,6 +15,11 @@ const LoginContextProvider = ({ children }) => {
     const notify = () => toast.success("Login Successful !");
     const notify2 = () => toast.error("Login failed ! Please double check your account information !");
     const notify3 = () => toast.success("Successful account registration!");
+    const notify4 = () => toast.error("Sorry this email already exists in the system !");
+
+    const warning = () => toast.warn("Please fill out all fields!")
+    const warning2 = () => toast.warn("You have entered an invalid email address!!")
+    const warning3 = () => toast.warn("Password minimum 8 characters!")
     
     
     //State
@@ -37,9 +42,6 @@ const LoginContextProvider = ({ children }) => {
             password = password.toLowerCase();
             const response = await postAPI(API_LOGIN, { email, password })
 
-            console.log("Usename : ", email)
-            console.log("Passwword : ", password)
-            console.log("Response : ", response)
             if (response) {
 
                 UserLoginSuccess(response.data)
@@ -68,6 +70,13 @@ const LoginContextProvider = ({ children }) => {
 
 
     }
+    const validateEmail = (email) => {
+        return String(email)
+          .toLowerCase()
+          .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          );
+      };
 
     //Res
     const handleResgister = async (e) => {
@@ -77,18 +86,27 @@ const LoginContextProvider = ({ children }) => {
             email = email.toLowerCase();
             password = password.toLowerCase();
             username = username.toLowerCase();
+            if( validateEmail(email) == null) {
+                warning2()
+             
+                 return ;
+             }else if(password.length < 8){
+                 
+                warning3()
+                return;
+             }
+
             const response = await postAPI(API_SEVER_USERS + "/resgister", { email, username, password })
 
-            console.log("Email : ", email)
-            console.log("Username:", username)
-            console.log("Passwword : ", password)
-            console.log("Response : ", response)
             if (response) {
                 notify3()
                 navigate('/login')
+            }else{
+                notify4()
+                return
             }
         } else {
-            alert("Vui lòng điền đủ vào các ô!")
+           warning()
         }
 
 
@@ -102,7 +120,6 @@ const LoginContextProvider = ({ children }) => {
     const getListUsers = async () => {
 
         const response = await getAPI2(API_SEVER_USERS + `/listusers`)
-        console.log("List users :", response)
         // check dữ dữ liệu trước khi lấy
         if (response) {
             setListUsers(response)
